@@ -14,8 +14,8 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        $albums=Album::all();
-       return view('albums.index',compact('albums'));
+        $albums = Album::all();
+        return view('albums.index', compact('albums'));
     }
 
     /**
@@ -37,7 +37,7 @@ class AlbumController extends Controller
     public function store(Request $request)
     {
         Album::create([
-            'title'=>$request->title
+            'title' => $request->title
         ]);
         return redirect()->route('albums.index');
     }
@@ -51,7 +51,7 @@ class AlbumController extends Controller
     public function show(Album $album)
     {
         $photos = $album->getMedia();
-        return view('albums.show',compact('album','photos'));
+        return view('albums.show', compact('album', 'photos'));
     }
 
     /**
@@ -62,7 +62,7 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        return view('albums.edit',compact('album'));
+        return view('albums.edit', compact('album'));
     }
 
     /**
@@ -74,10 +74,10 @@ class AlbumController extends Controller
      */
     public function update(Request $request, Album $album)
     {
-       $album->update([
-           'title'=>$request->title
-       ]);
-       return redirect()->route('albums.index');
+        $album->update([
+            'title' => $request->title
+        ]);
+        return redirect()->route('albums.index');
     }
 
     /**
@@ -89,15 +89,32 @@ class AlbumController extends Controller
     public function destroy(Album $album)
     {
         $album->delete();
+
         return redirect()->back();
     }
 
     public function upload(Request $request, Album $album)
     {
-       if($request->has('image')){
-          $album->addMedia($request->image)->toMediaCollection();
+        if ($request->has('image')) {
+            $album->addMedia($request->image)->toMediaCollection();
+        }
+        return redirect()->back();
+    }
 
-       }
-       return redirect()->back();
+    public function showImage(Album $album, $id)
+    {
+        $media = $album->getMedia();
+        $image = $media->where('id', $id)->first();
+        
+        return view('albums.image-show', compact('album', 'image'));
+    }
+
+    public function destroyImage(Album $album, $id)
+    {
+        $media = $album->getMedia();
+        $image = $media->where('id', $id)->first();
+        $image->delete();
+
+        return redirect()->back();
     }
 }

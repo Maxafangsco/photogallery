@@ -18,12 +18,20 @@ class Album extends Model implements HasMedia
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-              ->width(368)
-              ->height(232)
-              ->sharpen(10);
+              ->width(200)
+              ->height(200)
+              ->sharpen(10)
+              ->withResponsiveImages();
 
-        $this->addMediaConversion('old-picture')
-              ->sepia()
-              ->border(10, 'black', Manipulations::BORDER_OVERLAY);
+        $this
+              ->addMediaConversion('my-conversion')
+              ->greyscale()
+              ->quality(80)
+              ->withResponsiveImages();
+
+        $this->addMediaConversion('square')
+              ->width(412)
+              ->height(412)
+              ->sharpen(10);
     }
 }
